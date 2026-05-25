@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -654,9 +655,172 @@
     .cta-wrapper { grid-template-columns: 1fr; }
   }
 
+  /* ── 回答一覧アコーディオン ── */
+  .answers-accordion {
+    margin-bottom: 48px;
+  }
+  .accordion-toggle {
+    width: 100%;
+    background: var(--white);
+    border: 1.5px solid #e8e4dc;
+    border-radius: 14px;
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: 'Noto Serif JP', serif;
+    font-size: 14px;
+    color: var(--text-main);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+  .accordion-toggle:hover {
+    border-color: var(--gold);
+    background: var(--gold-pale);
+  }
+  .accordion-toggle.open {
+    border-color: var(--navy);
+    border-radius: 14px 14px 0 0;
+    background: var(--navy);
+    color: var(--white);
+  }
+  .accordion-arrow {
+    font-size: 12px;
+    transition: transform 0.3s ease;
+    color: var(--gold);
+  }
+  .accordion-toggle.open .accordion-arrow {
+    transform: rotate(180deg);
+  }
+  .accordion-body {
+    display: none;
+    border: 1.5px solid var(--navy);
+    border-top: none;
+    border-radius: 0 0 14px 14px;
+    overflow: hidden;
+    background: var(--white);
+  }
+  .accordion-body.open {
+    display: block;
+    animation: fadeUp 0.3s ease;
+  }
+  .answer-section-group {
+    border-bottom: 1px solid #f0ece4;
+  }
+  .answer-section-group:last-child { border-bottom: none; }
+  .answer-section-header {
+    padding: 12px 24px;
+    background: #f7f4ee;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--text-soft);
+    font-family: 'Cormorant Garamond', serif;
+    text-transform: uppercase;
+    border-bottom: 1px solid #ede9e0;
+  }
+  .answer-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 14px 24px;
+    border-bottom: 1px solid #f5f2ec;
+    transition: background 0.15s;
+  }
+  .answer-row:last-child { border-bottom: none; }
+  .answer-row:hover { background: #faf8f4; }
+  .answer-qnum {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    color: var(--gold);
+    min-width: 32px;
+    padding-top: 2px;
+    letter-spacing: 0.05em;
+  }
+  .answer-qtext {
+    font-size: 13px;
+    color: var(--text-soft);
+    line-height: 1.7;
+    flex: 1;
+    font-weight: 300;
+  }
+  .answer-chip {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 12px;
+    border-radius: 50px;
+    white-space: nowrap;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+  .answer-chip.positive {
+    background: #e8f5ed;
+    color: #3d7a52;
+  }
+  .answer-chip.neutral {
+    background: #f5f0e8;
+    color: #8a7040;
+  }
+  .answer-chip.negative {
+    background: #fde8e8;
+    color: #a04040;
+  }
+
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── 名前入力 ── */
+  .name-input-wrap {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto 28px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.88s;
+  }
+  .name-input-label {
+    display: block;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 10px;
+    text-align: left;
+  }
+  .name-input-label span {
+    color: var(--gold);
+    margin-left: 4px;
+  }
+  .name-input-field {
+    width: 100%;
+    background: rgba(255,255,255,0.07);
+    border: 1.5px solid rgba(200,169,110,0.35);
+    border-radius: 10px;
+    padding: 14px 18px;
+    font-family: 'Noto Serif JP', serif;
+    font-size: 16px;
+    color: var(--white);
+    outline: none;
+    transition: var(--transition);
+    box-sizing: border-box;
+    letter-spacing: 0.05em;
+  }
+  .name-input-field::placeholder {
+    color: rgba(255,255,255,0.25);
+    font-size: 14px;
+  }
+  .name-input-field:focus {
+    border-color: var(--gold);
+    background: rgba(255,255,255,0.1);
+    box-shadow: 0 0 0 3px rgba(200,169,110,0.15);
+  }
+  .name-error {
+    font-size: 12px;
+    color: #f08080;
+    margin-top: 8px;
+    text-align: left;
+    display: none;
   }
 
   @media (max-width: 480px) {
@@ -693,6 +857,19 @@
         <div class="meta-num">3〜5</div>
         <div class="meta-label">所要分</div>
       </div>
+    </div>
+    <div class="name-input-wrap">
+      <label class="name-input-label">お名前<span>（必須）</span></label>
+      <input
+        class="name-input-field"
+        id="patient-name"
+        type="text"
+        placeholder="例）きょうせい　たろう"
+        maxlength="30"
+        autocomplete="name"
+        onkeydown="if(event.key==='Enter') startQuiz()"
+      >
+      <div class="name-error" id="name-error">お名前を入力してください</div>
     </div>
     <button class="btn-start" onclick="startQuiz()">診断をはじめる</button>
   </div>
@@ -750,6 +927,14 @@
     <div class="section-bars" id="section-bars"></div>
     <div class="section-score-title">個別フィードバック</div>
     <div class="feedback-cards" id="feedback-cards"></div>
+    <div class="answers-accordion">
+      <button class="accordion-toggle" id="accordion-btn" onclick="toggleAccordion()">
+        <span>📋　回答内容をすべて確認する</span>
+        <span class="accordion-arrow">▼</span>
+      </button>
+      <div class="accordion-body" id="accordion-body"></div>
+    </div>
+
     <div class="cta-wrapper">
       <!-- オンライン相談 -->
       <div class="cta-section">
@@ -841,8 +1026,22 @@ function getOptions(q) {
 // ===== STATE =====
 let currentIdx = 0;
 let answers = {};
+let patientName = '';
 
 function startQuiz() {
+  const nameInput = document.getElementById('patient-name');
+  const nameError = document.getElementById('name-error');
+  const name = nameInput.value.trim();
+
+  if (!name) {
+    nameError.style.display = 'block';
+    nameInput.focus();
+    nameInput.style.borderColor = '#f08080';
+    return;
+  }
+
+  nameError.style.display = 'none';
+  patientName = name;
   document.getElementById('screen-top').style.display = 'none';
   document.getElementById('screen-quiz').style.display = 'block';
   renderQuestion();
@@ -1020,6 +1219,7 @@ function submitQuiz() {
   document.getElementById('result-type-badge').textContent = result.badge;
   document.getElementById('result-headline').textContent = result.headline.replace('\n', '\n');
   document.getElementById('result-summary').textContent = result.summary;
+  document.getElementById('result-label').textContent = patientName + ' さんの診断結果';
 
   let displayed = 0;
   const target = pct;
@@ -1068,14 +1268,117 @@ function submitQuiz() {
       <div class="feedback-text">${f.text}</div>
     </div>
   `).join('');
+
+  // ===== Googleフォームに自動送信 =====
+  sendToGoogleForm(pct, secPct, result);
+}
+
+function sendToGoogleForm(pct, secPct, result) {
+  // 回答一覧テキストを生成
+  const answerText = QUESTIONS.map((q, i) => {
+    const ans = answers[q.id] || '未回答';
+    return `Q${i+1}(${q.id}) ${q.q} → ${ans}`;
+  }).join('\n');
+
+  // 現在日時
+  const now = new Date();
+  const dateStr = now.getFullYear() + '/'
+    + String(now.getMonth()+1).padStart(2,'0') + '/'
+    + String(now.getDate()).padStart(2,'0') + ' '
+    + String(now.getHours()).padStart(2,'0') + ':'
+    + String(now.getMinutes()).padStart(2,'0');
+
+  const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSeRvD20QKTwdpWs7X-5YUH-qj3L_mU7JxUDf8ZwEditZCyfBA/formResponse';
+
+  const params = new URLSearchParams({
+    'entry.2117905508': dateStr,
+    'entry.534791481':  patientName,
+    'entry.2023376793': pct + '%',
+    'entry.1485562501': result.badge,
+    'entry.2070972019': secPct['A'] + '%',
+    'entry.930558154':  secPct['B'] + '%',
+    'entry.325648234':  secPct['C'] + '%',
+    'entry.427504257':  secPct['D'] + '%',
+    'entry.424158273':  secPct['E'] + '%',
+    'entry.204843057':  answerText,
+  });
+
+  // no-corsで送信（レスポンスは受け取れないが送信はされる）
+  fetch(FORM_ACTION, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: params.toString()
+  }).catch(() => {
+    // 送信失敗しても患者の体験には影響させない
+    console.warn('フォーム送信に失敗しました');
+  });
 }
 
 function retryQuiz() {
   currentIdx = 0;
   answers = {};
+  patientName = '';
+  document.getElementById('patient-name').value = '';
+  document.getElementById('patient-name').style.borderColor = '';
+  document.getElementById('name-error').style.display = 'none';
+  document.getElementById('accordion-body').innerHTML = '';
+  document.getElementById('accordion-body').classList.remove('open');
+  document.getElementById('accordion-btn').classList.remove('open');
   document.getElementById('screen-result').style.display = 'none';
   document.getElementById('screen-top').style.display = 'flex';
   window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+// ===== ACCORDION: 全回答一覧 =====
+function buildAnswerAccordion() {
+  const sections = ['A','B','C','D','E'];
+  let html = '';
+  let qNum = 1;
+
+  sections.forEach(sec => {
+    const qs = QUESTIONS.filter(q => q.section === sec);
+    const sectionName = qs[0].sectionName;
+
+    html += `<div class="answer-section-group">`;
+    html += `<div class="answer-section-header">${sec}. ${sectionName}</div>`;
+
+    qs.forEach(q => {
+      const ans = answers[q.id] || '—';
+      let chipClass = 'neutral';
+      if (q.positive.includes(ans)) chipClass = 'positive';
+      else if (q.negative.includes(ans)) chipClass = 'negative';
+
+      html += `
+        <div class="answer-row">
+          <div class="answer-qnum">Q${qNum}</div>
+          <div class="answer-qtext">${q.q}</div>
+          <div class="answer-chip ${chipClass}">${ans}</div>
+        </div>
+      `;
+      qNum++;
+    });
+
+    html += `</div>`;
+  });
+
+  document.getElementById('accordion-body').innerHTML = html;
+}
+
+function toggleAccordion() {
+  const btn = document.getElementById('accordion-btn');
+  const body = document.getElementById('accordion-body');
+  const isOpen = body.classList.contains('open');
+
+  if (isOpen) {
+    body.classList.remove('open');
+    btn.classList.remove('open');
+  } else {
+    // 初回のみ生成
+    if (!body.innerHTML) buildAnswerAccordion();
+    body.classList.add('open');
+    btn.classList.add('open');
+  }
 }
 </script>
 </body>
