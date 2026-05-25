@@ -1068,24 +1068,36 @@ function renderQuestion() {
     <div class="question-card">
       <div class="question-num">Q${currentIdx + 1} / ${total}</div>
       <div class="question-text">${q.q}</div>
-      <div class="answer-options">
-        ${opts.map(opt => `
-          <button class="answer-btn ${chosen === opt ? 'selected' : ''}" onclick="selectAnswer('${opt}')">
-            <div class="answer-circle"></div>
-            ${opt}
-          </button>
-        `).join('')}
-      </div>
+      <div class="answer-options" id="answer-options"></div>
     </div>
     <div class="nav-row">
-      ${currentIdx > 0 ? `<button class="btn-nav btn-prev" onclick="goBack()">← 戻る</button>` : '<div></div>'}
+      ${currentIdx > 0 ? `<button class="btn-nav btn-prev" id="btn-prev">← 戻る</button>` : '<div></div>'}
       <button class="btn-nav btn-next ${isLast ? 'btn-submit' : ''}" id="btn-next"
-        onclick="${isLast ? 'submitQuiz()' : 'goNext()'}"
         ${!chosen ? 'disabled' : ''}>
         ${isLast ? '結果を見る' : '次へ →'}
       </button>
     </div>
   `;
+
+  // 選択肢ボタンをJSで生成（onclick属性を使わない）
+  const optContainer = document.getElementById('answer-options');
+  opts.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn' + (chosen === opt ? ' selected' : '');
+    btn.innerHTML = '<div class="answer-circle"></div>' + opt;
+    btn.addEventListener('click', () => selectAnswer(opt));
+    optContainer.appendChild(btn);
+  });
+
+  // ナビボタン
+  const btnNext = document.getElementById('btn-next');
+  btnNext.addEventListener('click', () => {
+    if (isLast) submitQuiz();
+    else goNext();
+  });
+
+  const btnPrev = document.getElementById('btn-prev');
+  if (btnPrev) btnPrev.addEventListener('click', goBack);
 }
 
 function selectAnswer(opt) {
@@ -1285,26 +1297,27 @@ function sendToGoogleForm(pct, secPct, result) {
     + String(now.getHours()).padStart(2,'0') + ':'
     + String(now.getMinutes()).padStart(2,'0');
 
-  const FORM_ID = '1FAIpQLSeRvD20QKTwdpWs7X-5YUH-qj3L_mU7JxUDf8ZwEditZCyfBA';
-  const base = 'https://docs.google.com/forms/d/e/' + FORM_ID + '/formResponse?';
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbznjbL2yBP-JKyPwx0ckSlRpaiDRLiolZtcbW-CdWgsTuIksQNxWMlRvgh878WyATK5/exec';
 
-  const params = new URLSearchParams({
-    'entry.2117905508': dateStr,
-    'entry.534791481':  patientName,
-    'entry.2023376793': pct + '%',
-    'entry.1485562501': result.badge,
-    'entry.2070972019': secPct['A'] + '%',
-    'entry.930558154':  secPct['B'] + '%',
-    'entry.325648234':  secPct['C'] + '%',
-    'entry.427504257':  secPct['D'] + '%',
-    'entry.424158273':  secPct['E'] + '%',
-    'entry.204843057':  answerText,
-    'submit': 'Submit',
+  fetch(GAS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      datetime: dateStr,
+      name:     patientName,
+      score:    pct + '%',
+      type:     result.badge,
+      secA:     secPct['A'] + '%',
+      secB:     secPct['B'] + '%',
+      secC:     secPct['C'] + '%',
+      secD:     secPct['D'] + '%',
+      secE:     secPct['E'] + '%',
+      answers:  answerText,
+    })
+  }).catch(() => {
+    console.warn('GAS送信に失敗しました');
   });
-
-  // imgタグ経由で送信（CORSを回避）
-  const img = new Image();
-  img.src = base + params.toString();
 }
 
 function retryQuiz() {
