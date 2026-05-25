@@ -1215,31 +1215,28 @@ function submitQuiz() {
   const { pct, secPct, flaggedQs } = calcScore();
   const result = getResultType(pct);
 
-  // Animate percentage
+  // テキスト表示
   document.getElementById('result-type-badge').textContent = result.badge;
-  document.getElementById('result-headline').textContent = result.headline.replace('\n', '\n');
+  document.getElementById('result-headline').textContent = result.headline;
   document.getElementById('result-summary').textContent = result.summary;
   document.getElementById('result-label').textContent = patientName + ' さんの診断結果';
 
+  // スコアカウントアップ
   let displayed = 0;
-  const target = pct;
-  const duration = 1500;
-  const step = 16;
-  const inc = target / (duration / step);
   const counter = setInterval(() => {
-    displayed = Math.min(displayed + inc, target);
-    document.getElementById('result-pct').textContent = Math.floor(displayed);
-    if (displayed >= target) clearInterval(counter);
-  }, step);
+    displayed = Math.min(displayed + 1, pct);
+    document.getElementById('result-pct').textContent = displayed;
+    if (displayed >= pct) clearInterval(counter);
+  }, 20);
 
-  // Ring animation
-  const circumference = 2 * Math.PI * 80; // r=80
+  // リングアニメーション
+  const circumference = 2 * Math.PI * 80;
   const offset = circumference * (1 - pct / 100);
   setTimeout(() => {
     document.getElementById('score-ring').style.strokeDashoffset = offset;
   }, 100);
 
-  // Section bars
+  // セクションバー（DOMに挿入後にwidthをセット）
   const barsHtml = Object.entries(secPct).map(([sec, val], i) => `
     <div class="bar-row">
       <div class="bar-label-row">
@@ -1247,19 +1244,21 @@ function submitQuiz() {
         <span class="bar-pct">${val}%</span>
       </div>
       <div class="bar-track">
-        <div class="bar-fill" style="--delay:${0.2 + i * 0.12}s" data-width="${val}"></div>
+        <div class="bar-fill" style="--delay:${0.1 + i * 0.1}s" data-width="${val}"></div>
       </div>
     </div>
   `).join('');
   document.getElementById('section-bars').innerHTML = barsHtml;
-
-  setTimeout(() => {
-    document.querySelectorAll('.bar-fill').forEach(el => {
-      el.style.width = el.dataset.width + '%';
+  // 1フレーム待ってからwidth適用
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document.querySelectorAll('.bar-fill').forEach(el => {
+        el.style.width = el.dataset.width + '%';
+      });
     });
-  }, 200);
+  });
 
-  // Feedback
+  // フィードバック
   const feedbacks = generateFeedback(secPct, flaggedQs);
   document.getElementById('feedback-cards').innerHTML = feedbacks.map(f => `
     <div class="feedback-card ${f.type}">
@@ -1269,18 +1268,16 @@ function submitQuiz() {
     </div>
   `).join('');
 
-  // ===== Googleフォームに自動送信 =====
+  // Googleフォームに送信
   sendToGoogleForm(pct, secPct, result);
 }
 
 function sendToGoogleForm(pct, secPct, result) {
-  // 回答一覧テキストを生成
   const answerText = QUESTIONS.map((q, i) => {
     const ans = answers[q.id] || '未回答';
     return `Q${i+1}(${q.id}) ${q.q} → ${ans}`;
-  }).join('\n');
+  }).join(' / ');
 
-  // 現在日時
   const now = new Date();
   const dateStr = now.getFullYear() + '/'
     + String(now.getMonth()+1).padStart(2,'0') + '/'
@@ -1288,7 +1285,8 @@ function sendToGoogleForm(pct, secPct, result) {
     + String(now.getHours()).padStart(2,'0') + ':'
     + String(now.getMinutes()).padStart(2,'0');
 
-  const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSeRvD20QKTwdpWs7X-5YUH-qj3L_mU7JxUDf8ZwEditZCyfBA/formResponse';
+  const FORM_ID = '1FAIpQLSeRvD20QKTwdpWs7X-5YUH-qj3L_mU7JxUDf8ZwEditZCyfBA';
+  const base = 'https://docs.google.com/forms/d/e/' + FORM_ID + '/formResponse?';
 
   const params = new URLSearchParams({
     'entry.2117905508': dateStr,
@@ -1301,18 +1299,12 @@ function sendToGoogleForm(pct, secPct, result) {
     'entry.427504257':  secPct['D'] + '%',
     'entry.424158273':  secPct['E'] + '%',
     'entry.204843057':  answerText,
+    'submit': 'Submit',
   });
 
-  // no-corsで送信（レスポンスは受け取れないが送信はされる）
-  fetch(FORM_ACTION, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: params.toString()
-  }).catch(() => {
-    // 送信失敗しても患者の体験には影響させない
-    console.warn('フォーム送信に失敗しました');
-  });
+  // imgタグ経由で送信（CORSを回避）
+  const img = new Image();
+  img.src = base + params.toString();
 }
 
 function retryQuiz() {
