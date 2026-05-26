@@ -1219,6 +1219,11 @@ function generateFeedback(secPct, flaggedQs) {
 }
 
 function submitQuiz() {
+  // デバッグ確認
+  const ansCount = Object.keys(answers).length;
+  const sample = JSON.stringify(answers).slice(0, 200);
+  alert('回答数: ' + ansCount + '\n内容: ' + sample);
+
   document.getElementById('screen-quiz').style.display = 'none';
   document.getElementById('screen-result').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'instant' });
@@ -1377,13 +1382,4 @@ function toggleAccordion() {
   if (isOpen) {
     body.classList.remove('open');
     btn.classList.remove('open');
-  } else {
-    // 初回のみ生成
-    if (!body.innerHTML) buildAnswerAccordion();
-    body.classList.add('open');
-    btn.classList.add('open');
   }
-}
-</script>
-</body>
-</html>
