@@ -4,1382 +4,800 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>マウスピース矯正 適性診断 | みやもと矯正歯科医院</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --navy: #0d1b2e;
-    --navy-mid: #152540;
-    --navy-light: #1e3557;
-    --gold: #c8a96e;
-    --gold-light: #e2c99a;
-    --gold-pale: #f5edd8;
-    --cream: #faf6ee;
-    --text-main: #1a1a2e;
-    --text-soft: #5a6070;
-    --white: #ffffff;
-    --radius: 12px;
-    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+:root {
+  --navy: #0d1b2e;
+  --navy-mid: #152540;
+  --navy-light: #1e3557;
+  --gold: #c8a96e;
+  --gold-light: #e2c99a;
+  --gold-pale: #f5edd8;
+  --cream: #faf6ee;
+  --text-main: #1a1a2e;
+  --text-soft: #5a6070;
+  --white: #ffffff;
+  --radius: 12px;
+  --ease: cubic-bezier(0.4,0,0.2,1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Serif JP', serif; background: var(--cream); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── SCREENS ── */
+.screen { display: none; min-height: 100vh; }
+.screen.active { display: block; }
+#screen-top.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-  body {
-    font-family: 'Noto Serif JP', serif;
-    background: var(--cream);
-    color: var(--text-main);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+/* ── TOP ── */
+#screen-top {
+  background: var(--navy);
+  padding: 40px 24px;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+#screen-top::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 60% at 50% 30%, #1e3a5f 0%, transparent 70%);
+  pointer-events: none;
+}
+#screen-top::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.top-inner { position: relative; z-index: 1; max-width: 540px; width: 100%; }
+.clinic-name { font-family: 'Cormorant Garamond', serif; font-size: 12px; letter-spacing: 0.35em; color: var(--gold); text-transform: uppercase; margin-bottom: 28px; }
+.top-title { font-size: clamp(26px,5vw,38px); font-weight: 500; color: var(--white); line-height: 1.6; margin-bottom: 10px; }
+.top-subtitle { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 16px; color: var(--gold-light); margin-bottom: 36px; letter-spacing: 0.05em; }
+.gold-line { width: 48px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 0 auto 28px; }
+.top-desc { font-size: 13px; line-height: 2; color: rgba(255,255,255,0.65); font-weight: 300; margin-bottom: 36px; }
+.top-meta { display: flex; justify-content: center; gap: 36px; margin-bottom: 40px; }
+.meta-num { font-family: 'Cormorant Garamond', serif; font-size: 32px; color: var(--gold); line-height: 1; }
+.meta-label { font-size: 11px; color: rgba(255,255,255,0.45); letter-spacing: 0.1em; margin-top: 4px; }
+.name-wrap { max-width: 320px; margin: 0 auto 24px; text-align: left; }
+.name-label { display: block; font-size: 12px; letter-spacing: 0.15em; color: rgba(255,255,255,0.5); margin-bottom: 10px; }
+.name-label span { color: var(--gold); }
+.name-field {
+  width: 100%;
+  background: rgba(255,255,255,0.07);
+  border: 1.5px solid rgba(200,169,110,0.35);
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 16px;
+  color: var(--white);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.name-field::placeholder { color: rgba(255,255,255,0.22); font-size: 13px; }
+.name-field:focus { border-color: var(--gold); background: rgba(255,255,255,0.1); }
+.name-field.error { border-color: #f08080; }
+.name-error { font-size: 12px; color: #f08080; margin-top: 8px; display: none; }
+.btn-start {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--navy);
+  font-family: 'Noto Serif JP', serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 18px 56px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  box-shadow: 0 8px 32px rgba(200,169,110,0.35);
+}
+.btn-start:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(200,169,110,0.5); }
 
-  /* ── TOP PAGE ── */
-  #screen-top {
-    min-height: 100vh;
-    background: var(--navy);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 24px;
-    position: relative;
-    overflow: hidden;
-  }
-  #screen-top::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 70% 60% at 50% 30%, #1e3a5f 0%, transparent 70%),
-                radial-gradient(ellipse 40% 40% at 80% 80%, #1a2d4a 0%, transparent 60%);
-  }
-  #screen-top::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  }
-  .top-inner {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    max-width: 540px;
-  }
-  .clinic-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 13px;
-    letter-spacing: 0.3em;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 32px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.2s;
-  }
-  .top-title {
-    font-size: clamp(26px, 5vw, 38px);
-    font-weight: 500;
-    color: var(--white);
-    line-height: 1.6;
-    margin-bottom: 12px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.4s;
-  }
-  .top-subtitle {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(14px, 2.5vw, 18px);
-    font-style: italic;
-    color: var(--gold-light);
-    letter-spacing: 0.05em;
-    margin-bottom: 40px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.55s;
-  }
-  .gold-divider {
-    width: 60px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    margin: 0 auto 32px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.65s;
-  }
-  .top-desc {
-    font-size: 14px;
-    line-height: 2;
-    color: rgba(255,255,255,0.72);
-    font-weight: 300;
-    margin-bottom: 48px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.75s;
-  }
-  .top-meta {
-    display: flex;
-    justify-content: center;
-    gap: 32px;
-    margin-bottom: 48px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.85s;
-  }
-  .meta-item {
-    text-align: center;
-  }
-  .meta-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 32px;
-    font-weight: 300;
-    color: var(--gold);
-    line-height: 1;
-  }
-  .meta-label {
-    font-size: 11px;
-    color: rgba(255,255,255,0.5);
-    letter-spacing: 0.1em;
-    margin-top: 4px;
-  }
-  .btn-start {
-    display: inline-block;
-    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-    color: var(--navy);
-    font-family: 'Noto Serif JP', serif;
-    font-size: 16px;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    padding: 18px 56px;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: var(--transition);
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.95s;
-    box-shadow: 0 8px 32px rgba(200,169,110,0.35);
-  }
-  .btn-start:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(200,169,110,0.5);
-  }
+/* ── QUIZ ── */
+#screen-quiz { background: var(--cream); }
+.quiz-header {
+  background: var(--navy);
+  padding: 18px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.15);
+}
+.quiz-header-inner { max-width: 680px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+.quiz-clinic { font-family: 'Cormorant Garamond', serif; font-size: 12px; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; white-space: nowrap; }
+.prog-wrap { flex: 1; }
+.prog-labels { display: flex; justify-content: space-between; font-size: 11px; color: rgba(255,255,255,0.45); margin-bottom: 6px; }
+.prog-bar { height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 2px; transition: width 0.4s var(--ease); width: 0%; }
+.quiz-body { max-width: 680px; margin: 0 auto; padding: 36px 24px 80px; }
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--navy);
+  color: var(--gold);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  padding: 6px 16px;
+  border-radius: 50px;
+  margin-bottom: 18px;
+  font-family: 'Cormorant Garamond', serif;
+  text-transform: uppercase;
+}
+.sec-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--gold); }
+.q-card { background: var(--white); border-radius: 20px; padding: 32px 28px; box-shadow: 0 4px 30px rgba(0,0,0,0.06); margin-bottom: 20px; }
+.q-num { font-family: 'Cormorant Garamond', serif; font-size: 12px; color: var(--gold); letter-spacing: 0.2em; margin-bottom: 12px; }
+.q-text { font-size: clamp(15px,2.5vw,18px); line-height: 1.8; color: var(--text-main); margin-bottom: 28px; }
+.opts { display: flex; flex-direction: column; gap: 10px; }
+.opt-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 18px;
+  border: 1.5px solid #e8e4dc;
+  border-radius: 12px;
+  background: var(--cream);
+  cursor: pointer;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 14px;
+  color: var(--text-main);
+  text-align: left;
+  width: 100%;
+  transition: border-color 0.15s, background 0.15s;
+}
+.opt-btn:hover { border-color: var(--gold); background: var(--gold-pale); }
+.opt-btn.selected { border-color: var(--navy); background: var(--navy); color: var(--white); }
+.opt-circle {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
+}
+.opt-btn.selected .opt-circle { background: var(--gold); border-color: var(--gold); }
+.opt-circle-inner { width: 7px; height: 7px; border-radius: 50%; background: white; opacity: 0; transition: opacity 0.15s; }
+.opt-btn.selected .opt-circle-inner { opacity: 1; }
+.nav-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 8px; }
+.btn-prev {
+  padding: 13px 24px;
+  border-radius: 50px;
+  border: 1.5px solid var(--navy);
+  background: transparent;
+  color: var(--navy);
+  font-family: 'Noto Serif JP', serif;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-prev:hover { background: var(--navy); color: white; }
+.btn-next {
+  flex: 1;
+  max-width: 260px;
+  padding: 13px 24px;
+  border-radius: 50px;
+  border: none;
+  background: var(--navy);
+  color: var(--white);
+  font-family: 'Noto Serif JP', serif;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s, transform 0.2s;
+  letter-spacing: 0.05em;
+}
+.btn-next:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-next:not(:disabled):hover { background: var(--navy-light); transform: translateY(-1px); }
+.btn-next.submit {
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  color: var(--navy);
+  font-weight: 700;
+}
+.btn-next.submit:not(:disabled):hover { box-shadow: 0 6px 20px rgba(200,169,110,0.4); }
 
-  /* ── QUIZ PAGE ── */
-  #screen-quiz {
-    display: none;
-    min-height: 100vh;
-    background: var(--cream);
-  }
-  .quiz-header {
-    background: var(--navy);
-    padding: 20px 24px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.15);
-  }
-  .quiz-header-inner {
-    max-width: 680px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 16px;
-  }
-  .quiz-clinic {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 12px;
-    letter-spacing: 0.2em;
-    color: var(--gold);
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-  .quiz-progress-wrap {
-    flex: 1;
-  }
-  .quiz-progress-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: rgba(255,255,255,0.5);
-    margin-bottom: 6px;
-  }
-  .quiz-progress-bar {
-    height: 3px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 2px;
-    overflow: hidden;
-  }
-  .quiz-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--gold), var(--gold-light));
-    border-radius: 2px;
-    transition: width 0.5s ease;
-    width: 0%;
-  }
+/* ── RESULT ── */
+#screen-result { background: var(--cream); }
+.result-hero {
+  background: var(--navy);
+  padding: 56px 24px 72px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.result-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 70% at 50% 0%, #1e3a5f, transparent);
+  pointer-events: none;
+}
+.result-hero::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.result-inner { position: relative; z-index: 1; }
+.result-label { font-family: 'Cormorant Garamond', serif; font-size: 12px; letter-spacing: 0.3em; color: var(--gold); text-transform: uppercase; margin-bottom: 28px; }
+.ring-wrap { position: relative; width: 176px; height: 176px; margin: 0 auto 28px; }
+.ring-svg { width: 176px; height: 176px; transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: rgba(255,255,255,0.1); stroke-width: 10; }
+.ring-fill { fill: none; stroke: url(#rg); stroke-width: 10; stroke-linecap: round; stroke-dasharray: 490; stroke-dashoffset: 490; transition: stroke-dashoffset 1.4s var(--ease) 0.2s; }
+.ring-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; }
+.ring-pct { font-family: 'Cormorant Garamond', serif; font-size: 46px; font-weight: 300; color: var(--white); line-height: 1; }
+.ring-sub { font-size: 11px; color: var(--gold); letter-spacing: 0.15em; margin-top: 4px; }
+.result-badge { display: inline-block; padding: 7px 26px; border: 1px solid var(--gold); border-radius: 50px; font-size: 13px; color: var(--gold-light); letter-spacing: 0.1em; margin-bottom: 18px; }
+.result-headline { font-size: clamp(20px,4vw,28px); font-weight: 500; color: var(--white); line-height: 1.6; margin-bottom: 14px; }
+.result-summary { font-size: 13px; line-height: 2; color: rgba(255,255,255,0.65); font-weight: 300; max-width: 460px; margin: 0 auto; }
 
-  .quiz-body {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 40px 24px 80px;
-  }
+.result-body { max-width: 680px; margin: 0 auto; padding: 44px 24px 80px; }
+.section-title { font-size: 12px; letter-spacing: 0.2em; color: var(--text-soft); text-transform: uppercase; font-family: 'Cormorant Garamond', serif; border-bottom: 1px solid #e8e4dc; padding-bottom: 12px; margin-bottom: 22px; }
 
-  .section-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--navy);
-    color: var(--gold);
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    padding: 6px 16px;
-    border-radius: 50px;
-    margin-bottom: 20px;
-    font-family: 'Cormorant Garamond', serif;
-    text-transform: uppercase;
-  }
-  .section-dot {
-    width: 6px; height: 6px;
-    background: var(--gold);
-    border-radius: 50%;
-  }
+/* セクションバー */
+.sec-bars { display: flex; flex-direction: column; gap: 14px; margin-bottom: 44px; }
+.bar-row { display: flex; flex-direction: column; gap: 6px; }
+.bar-labels { display: flex; justify-content: space-between; font-size: 13px; }
+.bar-name { color: var(--text-main); font-weight: 500; }
+.bar-pct { color: var(--gold); font-family: 'Cormorant Garamond', serif; font-size: 15px; }
+.bar-track { height: 5px; background: #e8e4dc; border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; background: linear-gradient(90deg, var(--navy), var(--navy-light)); border-radius: 3px; width: 0%; transition: width 1.1s var(--ease); }
 
-  .question-card {
-    background: var(--white);
-    border-radius: 20px;
-    padding: 36px 32px;
-    box-shadow: 0 4px 30px rgba(0,0,0,0.06);
-    margin-bottom: 24px;
-    animation: fadeUp 0.4s ease;
-  }
-  .question-num {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 13px;
-    color: var(--gold);
-    letter-spacing: 0.2em;
-    margin-bottom: 14px;
-  }
-  .question-text {
-    font-size: clamp(16px, 2.5vw, 19px);
-    font-weight: 400;
-    line-height: 1.75;
-    color: var(--text-main);
-    margin-bottom: 32px;
-  }
+/* フィードバック */
+.fb-cards { display: flex; flex-direction: column; gap: 14px; margin-bottom: 44px; }
+.fb-card { border-radius: 14px; padding: 20px 22px; border-left: 4px solid; }
+.fb-card.good { background: #f0f7f0; border-color: #5a9e6f; }
+.fb-card.caution { background: #fdf6ec; border-color: var(--gold); }
+.fb-card.note { background: #f0f4f8; border-color: #6a8fb5; }
+.fb-icon { font-size: 18px; margin-bottom: 6px; }
+.fb-title { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+.fb-card.good .fb-title { color: #3d7a52; }
+.fb-card.caution .fb-title { color: #9a7020; }
+.fb-card.note .fb-title { color: #3d5c7a; }
+.fb-text { font-size: 12px; line-height: 1.9; color: var(--text-soft); font-weight: 300; }
 
-  .answer-options {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .answer-btn {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 16px 20px;
-    border: 1.5px solid #e8e4dc;
-    border-radius: 12px;
-    background: var(--cream);
-    cursor: pointer;
-    transition: var(--transition);
-    font-family: 'Noto Serif JP', serif;
-    font-size: 15px;
-    color: var(--text-main);
-    text-align: left;
-    width: 100%;
-  }
-  .answer-btn:hover {
-    border-color: var(--gold);
-    background: var(--gold-pale);
-  }
-  .answer-btn.selected {
-    border-color: var(--navy);
-    background: var(--navy);
-    color: var(--white);
-  }
-  .answer-btn.selected .answer-circle {
-    background: var(--gold);
-    border-color: var(--gold);
-  }
-  .answer-circle {
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    border: 2px solid #ccc;
-    flex-shrink: 0;
-    transition: var(--transition);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .answer-circle::after {
-    content: '';
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: white;
-    opacity: 0;
-    transition: var(--transition);
-  }
-  .answer-btn.selected .answer-circle::after { opacity: 1; }
+/* アコーディオン */
+.accordion { margin-bottom: 44px; }
+.acc-btn {
+  width: 100%;
+  background: var(--white);
+  border: 1.5px solid #e8e4dc;
+  border-radius: 14px;
+  padding: 16px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 13px;
+  color: var(--text-main);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  transition: border-color 0.2s, background 0.2s;
+}
+.acc-btn:hover { border-color: var(--gold); background: var(--gold-pale); }
+.acc-btn.open { border-color: var(--navy); background: var(--navy); color: var(--white); border-radius: 14px 14px 0 0; }
+.acc-arrow { font-size: 11px; color: var(--gold); transition: transform 0.3s; }
+.acc-btn.open .acc-arrow { transform: rotate(180deg); }
+.acc-body { display: none; border: 1.5px solid var(--navy); border-top: none; border-radius: 0 0 14px 14px; background: var(--white); overflow: hidden; }
+.acc-sec-header { padding: 10px 22px; background: #f7f4ee; font-size: 11px; letter-spacing: 0.2em; color: var(--text-soft); font-family: 'Cormorant Garamond', serif; text-transform: uppercase; border-bottom: 1px solid #ede9e0; }
+.acc-row { display: flex; align-items: flex-start; gap: 14px; padding: 12px 22px; border-bottom: 1px solid #f5f2ec; }
+.acc-row:last-child { border-bottom: none; }
+.acc-qnum { font-family: 'Cormorant Garamond', serif; font-size: 12px; color: var(--gold); min-width: 28px; padding-top: 2px; }
+.acc-qtext { font-size: 12px; color: var(--text-soft); line-height: 1.7; flex: 1; font-weight: 300; }
+.acc-chip { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 50px; white-space: nowrap; }
+.acc-chip.pos { background: #e8f5ed; color: #3d7a52; }
+.acc-chip.neu { background: #f5f0e8; color: #8a7040; }
+.acc-chip.neg { background: #fde8e8; color: #a04040; }
 
-  .nav-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 12px;
-    gap: 12px;
-  }
-  .btn-nav {
-    padding: 14px 28px;
-    border-radius: 50px;
-    border: 1.5px solid var(--navy);
-    font-family: 'Noto Serif JP', serif;
-    font-size: 14px;
-    cursor: pointer;
-    transition: var(--transition);
-    letter-spacing: 0.05em;
-  }
-  .btn-prev {
-    background: transparent;
-    color: var(--navy);
-  }
-  .btn-prev:hover { background: var(--navy); color: white; }
-  .btn-next {
-    background: var(--navy);
-    color: var(--white);
-    flex: 1;
-    max-width: 280px;
-  }
-  .btn-next:hover:not(:disabled) {
-    background: var(--navy-light);
-  }
-  .btn-next:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-  .btn-submit {
-    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
-    color: var(--navy);
-    font-weight: 700;
-    border-color: var(--gold);
-  }
-  .btn-submit:hover:not(:disabled) {
-    box-shadow: 0 6px 24px rgba(200,169,110,0.4);
-    transform: translateY(-1px);
-  }
+/* CTA */
+.cta-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 0; }
+.cta-card { background: var(--navy); border-radius: 18px; padding: 32px 24px; text-align: center; position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; }
+.cta-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.cta-icon { font-size: 26px; margin-bottom: 12px; }
+.cta-tag { font-family: 'Cormorant Garamond', serif; font-size: 10px; letter-spacing: 0.2em; color: var(--gold); text-transform: uppercase; margin-bottom: 8px; }
+.cta-title { font-size: 16px; font-weight: 500; color: var(--white); margin-bottom: 10px; line-height: 1.6; }
+.cta-desc { font-size: 11px; line-height: 1.9; color: rgba(255,255,255,0.5); margin-bottom: 20px; font-weight: 300; flex: 1; }
+.cta-btn {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 50px;
+  font-family: 'Noto Serif JP', serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  letter-spacing: 0.05em;
+}
+.cta-btn.solid { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--navy); border: none; box-shadow: 0 4px 16px rgba(200,169,110,0.3); }
+.cta-btn.outline { background: transparent; color: var(--gold-light); border: 1.5px solid var(--gold); }
+.cta-btn:hover { transform: translateY(-2px); }
+.cta-btn.solid:hover { box-shadow: 0 8px 24px rgba(200,169,110,0.45); }
+.retry-row { text-align: center; margin-top: 18px; }
+.btn-retry { background: none; border: none; color: rgba(100,110,130,0.6); font-size: 12px; cursor: pointer; font-family: 'Noto Serif JP', serif; text-decoration: underline; transition: color 0.2s; }
+.btn-retry:hover { color: var(--text-soft); }
 
-  /* ── RESULT PAGE ── */
-  #screen-result {
-    display: none;
-    min-height: 100vh;
-  }
-  .result-hero {
-    background: var(--navy);
-    padding: 60px 24px 80px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .result-hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 60% 70% at 50% 0%, #1e3a5f, transparent);
-  }
-  .result-hero::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  }
-  .result-inner { position: relative; z-index: 1; }
-  .result-label {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 13px;
-    letter-spacing: 0.3em;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 24px;
-  }
-  .score-ring-wrap {
-    position: relative;
-    width: 180px;
-    height: 180px;
-    margin: 0 auto 32px;
-  }
-  .score-ring-svg {
-    transform: rotate(-90deg);
-    width: 180px; height: 180px;
-  }
-  .score-ring-bg {
-    fill: none;
-    stroke: rgba(255,255,255,0.1);
-    stroke-width: 10;
-  }
-  .score-ring-fill {
-    fill: none;
-    stroke: url(#goldGrad);
-    stroke-width: 10;
-    stroke-linecap: round;
-    stroke-dasharray: 502;
-    stroke-dashoffset: 502;
-    transition: stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1) 0.3s;
-  }
-  .score-num {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-  }
-  .score-pct {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 48px;
-    font-weight: 300;
-    color: var(--white);
-    line-height: 1;
-  }
-  .score-pct-sign {
-    font-size: 24px;
-    vertical-align: super;
-  }
-  .score-sub {
-    font-size: 11px;
-    color: var(--gold);
-    letter-spacing: 0.15em;
-    margin-top: 4px;
-  }
-  .result-type-badge {
-    display: inline-block;
-    padding: 8px 28px;
-    border: 1px solid var(--gold);
-    border-radius: 50px;
-    font-size: 14px;
-    color: var(--gold-light);
-    letter-spacing: 0.1em;
-    margin-bottom: 20px;
-  }
-  .result-headline {
-    font-size: clamp(22px, 4vw, 30px);
-    font-weight: 500;
-    color: var(--white);
-    margin-bottom: 16px;
-    line-height: 1.5;
-  }
-  .result-summary {
-    font-size: 14px;
-    line-height: 2;
-    color: rgba(255,255,255,0.7);
-    font-weight: 300;
-    max-width: 480px;
-    margin: 0 auto;
-  }
-
-  .result-body {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 48px 24px 80px;
-  }
-
-  .section-score-title {
-    font-size: 13px;
-    letter-spacing: 0.2em;
-    color: var(--text-soft);
-    text-transform: uppercase;
-    margin-bottom: 24px;
-    font-family: 'Cormorant Garamond', serif;
-    border-bottom: 1px solid #e8e4dc;
-    padding-bottom: 12px;
-  }
-
-  .section-bars {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 48px;
-  }
-  .bar-row {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .bar-label-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 13px;
-  }
-  .bar-label { color: var(--text-main); font-weight: 500; }
-  .bar-pct { color: var(--gold); font-family: 'Cormorant Garamond', serif; font-size: 15px; }
-  .bar-track {
-    height: 6px;
-    background: #e8e4dc;
-    border-radius: 3px;
-    overflow: hidden;
-  }
-  .bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--navy), var(--navy-light));
-    border-radius: 3px;
-    width: 0%;
-    transition: width 1.2s cubic-bezier(0.4,0,0.2,1) var(--delay, 0s);
-  }
-
-  .feedback-cards {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 48px;
-  }
-  .feedback-card {
-    border-radius: 16px;
-    padding: 24px;
-    border-left: 4px solid;
-  }
-  .feedback-card.good {
-    background: #f0f7f0;
-    border-color: #5a9e6f;
-  }
-  .feedback-card.caution {
-    background: #fdf6ec;
-    border-color: var(--gold);
-  }
-  .feedback-card.note {
-    background: #f0f4f8;
-    border-color: #6a8fb5;
-  }
-  .feedback-icon { font-size: 20px; margin-bottom: 8px; }
-  .feedback-title { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
-  .feedback-card.good .feedback-title { color: #3d7a52; }
-  .feedback-card.caution .feedback-title { color: #9a7020; }
-  .feedback-card.note .feedback-title { color: #3d5c7a; }
-  .feedback-text { font-size: 13px; line-height: 1.9; color: var(--text-soft); font-weight: 300; }
-
-  .cta-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    margin-bottom: 0;
-  }
-  .cta-section {
-    background: var(--navy);
-    border-radius: 20px;
-    padding: 36px 28px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .cta-section::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  }
-  .cta-icon {
-    font-size: 28px;
-    margin-bottom: 14px;
-    line-height: 1;
-  }
-  .cta-tag {
-    display: inline-block;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    color: var(--gold);
-    text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  .cta-title {
-    font-size: 18px;
-    font-weight: 500;
-    color: var(--white);
-    margin-bottom: 12px;
-    line-height: 1.65;
-  }
-  .cta-desc {
-    font-size: 12px;
-    line-height: 1.9;
-    color: rgba(255,255,255,0.55);
-    margin-bottom: 24px;
-    font-weight: 300;
-    flex: 1;
-  }
-  .btn-cta {
-    display: inline-block;
-    background: linear-gradient(135deg, var(--gold), var(--gold-light));
-    color: var(--navy);
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    padding: 14px 28px;
-    border-radius: 50px;
-    border: none;
-    cursor: pointer;
-    transition: var(--transition);
-    text-decoration: none;
-    font-family: 'Noto Serif JP', serif;
-    box-shadow: 0 6px 24px rgba(200,169,110,0.3);
-    width: 100%;
-    text-align: center;
-  }
-  .btn-cta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 32px rgba(200,169,110,0.5);
-  }
-  .btn-cta.outline {
-    background: transparent;
-    color: var(--gold-light);
-    border: 1.5px solid var(--gold);
-    box-shadow: none;
-  }
-  .btn-cta.outline:hover {
-    background: rgba(200,169,110,0.1);
-    box-shadow: 0 6px 20px rgba(200,169,110,0.2);
-  }
-  .cta-divider {
-    width: 1px;
-    background: rgba(255,255,255,0.08);
-    align-self: stretch;
-    display: none; /* handled by gap */
-  }
-  .retry-row {
-    text-align: center;
-    margin-top: 20px;
-  }
-  .btn-retry {
-    background: none;
-    border: none;
-    color: rgba(100,110,130,0.7);
-    font-size: 12px;
-    cursor: pointer;
-    font-family: 'Noto Serif JP', serif;
-    transition: color 0.2s;
-    text-decoration: underline;
-  }
-  .btn-retry:hover { color: var(--text-soft); }
-
-  @media (max-width: 580px) {
-    .cta-wrapper { grid-template-columns: 1fr; }
-  }
-
-  /* ── 回答一覧アコーディオン ── */
-  .answers-accordion {
-    margin-bottom: 48px;
-  }
-  .accordion-toggle {
-    width: 100%;
-    background: var(--white);
-    border: 1.5px solid #e8e4dc;
-    border-radius: 14px;
-    padding: 18px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: var(--transition);
-    font-family: 'Noto Serif JP', serif;
-    font-size: 14px;
-    color: var(--text-main);
-    font-weight: 500;
-    letter-spacing: 0.05em;
-  }
-  .accordion-toggle:hover {
-    border-color: var(--gold);
-    background: var(--gold-pale);
-  }
-  .accordion-toggle.open {
-    border-color: var(--navy);
-    border-radius: 14px 14px 0 0;
-    background: var(--navy);
-    color: var(--white);
-  }
-  .accordion-arrow {
-    font-size: 12px;
-    transition: transform 0.3s ease;
-    color: var(--gold);
-  }
-  .accordion-toggle.open .accordion-arrow {
-    transform: rotate(180deg);
-  }
-  .accordion-body {
-    display: none;
-    border: 1.5px solid var(--navy);
-    border-top: none;
-    border-radius: 0 0 14px 14px;
-    overflow: hidden;
-    background: var(--white);
-  }
-  .accordion-body.open {
-    display: block;
-    animation: fadeUp 0.3s ease;
-  }
-  .answer-section-group {
-    border-bottom: 1px solid #f0ece4;
-  }
-  .answer-section-group:last-child { border-bottom: none; }
-  .answer-section-header {
-    padding: 12px 24px;
-    background: #f7f4ee;
-    font-size: 11px;
-    letter-spacing: 0.2em;
-    color: var(--text-soft);
-    font-family: 'Cormorant Garamond', serif;
-    text-transform: uppercase;
-    border-bottom: 1px solid #ede9e0;
-  }
-  .answer-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 14px 24px;
-    border-bottom: 1px solid #f5f2ec;
-    transition: background 0.15s;
-  }
-  .answer-row:last-child { border-bottom: none; }
-  .answer-row:hover { background: #faf8f4; }
-  .answer-qnum {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 12px;
-    color: var(--gold);
-    min-width: 32px;
-    padding-top: 2px;
-    letter-spacing: 0.05em;
-  }
-  .answer-qtext {
-    font-size: 13px;
-    color: var(--text-soft);
-    line-height: 1.7;
-    flex: 1;
-    font-weight: 300;
-  }
-  .answer-chip {
-    font-size: 12px;
-    font-weight: 600;
-    padding: 3px 12px;
-    border-radius: 50px;
-    white-space: nowrap;
-    letter-spacing: 0.05em;
-    flex-shrink: 0;
-  }
-  .answer-chip.positive {
-    background: #e8f5ed;
-    color: #3d7a52;
-  }
-  .answer-chip.neutral {
-    background: #f5f0e8;
-    color: #8a7040;
-  }
-  .answer-chip.negative {
-    background: #fde8e8;
-    color: #a04040;
-  }
-
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── 名前入力 ── */
-  .name-input-wrap {
-    width: 100%;
-    max-width: 320px;
-    margin: 0 auto 28px;
-    opacity: 0;
-    animation: fadeUp 0.8s ease forwards 0.88s;
-  }
-  .name-input-label {
-    display: block;
-    font-size: 12px;
-    letter-spacing: 0.15em;
-    color: rgba(255,255,255,0.5);
-    margin-bottom: 10px;
-    text-align: left;
-  }
-  .name-input-label span {
-    color: var(--gold);
-    margin-left: 4px;
-  }
-  .name-input-field {
-    width: 100%;
-    background: rgba(255,255,255,0.07);
-    border: 1.5px solid rgba(200,169,110,0.35);
-    border-radius: 10px;
-    padding: 14px 18px;
-    font-family: 'Noto Serif JP', serif;
-    font-size: 16px;
-    color: var(--white);
-    outline: none;
-    transition: var(--transition);
-    box-sizing: border-box;
-    letter-spacing: 0.05em;
-  }
-  .name-input-field::placeholder {
-    color: rgba(255,255,255,0.25);
-    font-size: 14px;
-  }
-  .name-input-field:focus {
-    border-color: var(--gold);
-    background: rgba(255,255,255,0.1);
-    box-shadow: 0 0 0 3px rgba(200,169,110,0.15);
-  }
-  .name-error {
-    font-size: 12px;
-    color: #f08080;
-    margin-top: 8px;
-    text-align: left;
-    display: none;
-  }
-
-  @media (max-width: 480px) {
-    .question-card { padding: 24px 20px; }
-    .nav-row { flex-wrap: wrap; }
-    .btn-next { max-width: 100%; }
-  }
+@media (max-width: 520px) {
+  .cta-wrap { grid-template-columns: 1fr; }
+  .q-card { padding: 24px 18px; }
+}
 </style>
 </head>
 <body>
 
-<!-- ===== TOP PAGE ===== -->
-<div id="screen-top">
+<!-- TOP -->
+<div id="screen-top" class="screen active">
   <div class="top-inner">
     <div class="clinic-name">みやもと矯正歯科医院</div>
     <h1 class="top-title">マウスピース矯正<br>適性診断</h1>
     <p class="top-subtitle">Aligner Suitability Assessment</p>
-    <div class="gold-divider"></div>
+    <div class="gold-line"></div>
     <p class="top-desc">
-      マウスピース型矯正装置（アライナー）は、患者さまのライフスタイルや<br>
-      生活習慣との相性が治療の成否に大きく影響します。<br>
-      30の質問に答えて、あなたの適性をチェックしてみましょう。
+      マウスピース型矯正装置（アライナー）は、患者さまの<br>
+      ライフスタイルとの相性が治療の成否に大きく影響します。<br>
+      30の質問に答えて、あなたの適性をチェックしましょう。
     </p>
     <div class="top-meta">
-      <div class="meta-item">
-        <div class="meta-num">30</div>
-        <div class="meta-label">質問数</div>
-      </div>
-      <div class="meta-item">
-        <div class="meta-num">5</div>
-        <div class="meta-label">カテゴリ</div>
-      </div>
-      <div class="meta-item">
-        <div class="meta-num">3〜5</div>
-        <div class="meta-label">所要分</div>
-      </div>
+      <div><div class="meta-num">30</div><div class="meta-label">質問数</div></div>
+      <div><div class="meta-num">5</div><div class="meta-label">カテゴリ</div></div>
+      <div><div class="meta-num">3〜5</div><div class="meta-label">所要分</div></div>
     </div>
-    <div class="name-input-wrap">
-      <label class="name-input-label">お名前<span>（必須）</span></label>
-      <input
-        class="name-input-field"
-        id="patient-name"
-        type="text"
-        placeholder="例）きょうせい　たろう"
-        maxlength="30"
-        autocomplete="name"
-        onkeydown="if(event.key==='Enter') startQuiz()"
-      >
+    <div class="name-wrap">
+      <label class="name-label" for="patient-name">お名前<span>（必須）</span></label>
+      <input class="name-field" id="patient-name" type="text" placeholder="例）きょうせい　たろう" maxlength="30" autocomplete="name">
       <div class="name-error" id="name-error">お名前を入力してください</div>
     </div>
-    <button class="btn-start" onclick="startQuiz()">診断をはじめる</button>
+    <button class="btn-start" id="btn-start">診断をはじめる</button>
   </div>
 </div>
 
-<!-- ===== QUIZ PAGE ===== -->
-<div id="screen-quiz">
+<!-- QUIZ -->
+<div id="screen-quiz" class="screen">
   <div class="quiz-header">
     <div class="quiz-header-inner">
       <div class="quiz-clinic">みやもと矯正歯科</div>
-      <div class="quiz-progress-wrap">
-        <div class="quiz-progress-label">
-          <span id="prog-current">1 / 30</span>
-          <span id="prog-section">A. 日常生活</span>
+      <div class="prog-wrap">
+        <div class="prog-labels">
+          <span id="prog-num">1 / 30</span>
+          <span id="prog-sec">A. 日常生活</span>
         </div>
-        <div class="quiz-progress-bar">
-          <div class="quiz-progress-fill" id="prog-fill"></div>
-        </div>
+        <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
       </div>
     </div>
   </div>
   <div class="quiz-body" id="quiz-body"></div>
 </div>
 
-<!-- ===== RESULT PAGE ===== -->
-<div id="screen-result">
+<!-- RESULT -->
+<div id="screen-result" class="screen">
   <div class="result-hero">
+    <svg width="0" height="0" style="position:absolute">
+      <defs>
+        <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#c8a96e"/>
+          <stop offset="100%" stop-color="#e2c99a"/>
+        </linearGradient>
+      </defs>
+    </svg>
     <div class="result-inner">
-      <svg width="0" height="0">
-        <defs>
-          <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:#c8a96e"/>
-            <stop offset="100%" style="stop-color:#e2c99a"/>
-          </linearGradient>
-        </defs>
-      </svg>
-      <div class="result-label">Aligner Suitability Result</div>
-      <div class="score-ring-wrap">
-        <svg class="score-ring-svg" viewBox="0 0 180 180">
-          <circle class="score-ring-bg" cx="90" cy="90" r="80"/>
-          <circle class="score-ring-fill" id="score-ring" cx="90" cy="90" r="80"/>
+      <div class="result-label" id="result-label">診断結果</div>
+      <div class="ring-wrap">
+        <svg class="ring-svg" viewBox="0 0 176 176">
+          <circle class="ring-bg" cx="88" cy="88" r="78"/>
+          <circle class="ring-fill" id="ring-fill" cx="88" cy="88" r="78"/>
         </svg>
-        <div class="score-num">
-          <div class="score-pct"><span class="score-pct-sign"></span><span id="result-pct">0</span><span class="score-pct-sign">%</span></div>
-          <div class="score-sub">適合スコア</div>
+        <div class="ring-text">
+          <div class="ring-pct"><span id="pct-num">0</span>%</div>
+          <div class="ring-sub">適合スコア</div>
         </div>
       </div>
-      <div class="result-type-badge" id="result-type-badge"></div>
+      <div class="result-badge" id="result-badge"></div>
       <div class="result-headline" id="result-headline"></div>
       <p class="result-summary" id="result-summary"></p>
     </div>
   </div>
   <div class="result-body">
-    <div class="section-score-title">カテゴリ別スコア</div>
-    <div class="section-bars" id="section-bars"></div>
-    <div class="section-score-title">個別フィードバック</div>
-    <div class="feedback-cards" id="feedback-cards"></div>
-    <div class="answers-accordion">
-      <button class="accordion-toggle" id="accordion-btn" onclick="toggleAccordion()">
+    <div class="section-title">カテゴリ別スコア</div>
+    <div class="sec-bars" id="sec-bars"></div>
+    <div class="section-title">個別フィードバック</div>
+    <div class="fb-cards" id="fb-cards"></div>
+    <div class="accordion">
+      <button class="acc-btn" id="acc-btn">
         <span>📋　回答内容をすべて確認する</span>
-        <span class="accordion-arrow">▼</span>
+        <span class="acc-arrow">▼</span>
       </button>
-      <div class="accordion-body" id="accordion-body"></div>
+      <div class="acc-body" id="acc-body"></div>
     </div>
-
-    <div class="cta-wrapper">
-      <!-- オンライン相談 -->
-      <div class="cta-section">
+    <div class="cta-wrap">
+      <div class="cta-card">
         <div class="cta-icon">💻</div>
         <div class="cta-tag">Online Consultation</div>
         <div class="cta-title">矯正専門医による<br>オンライン相談</div>
-        <p class="cta-desc">
-          Google Meetにて、ご自宅から<br>
-          気軽にご相談いただけます。<br>
-          診断結果をもとに治療の<br>方向性をご説明します。
-        </p>
-        <a class="btn-cta" href="https://m-ortho.github.io/web-meeting/" target="_blank" rel="noopener">オンライン相談を予約する</a>
+        <p class="cta-desc">Google Meetにて、ご自宅から気軽にご相談いただけます。診断結果をもとに治療の方向性をご説明します。</p>
+        <a class="cta-btn solid" href="https://m-ortho.github.io/web-meeting/" target="_blank" rel="noopener">オンライン相談を予約する</a>
       </div>
-      <!-- 初診相談 -->
-      <div class="cta-section">
+      <div class="cta-card">
         <div class="cta-icon">🏥</div>
         <div class="cta-tag">In-Clinic Consultation</div>
         <div class="cta-title">矯正専門医による<br>初診相談（来院）</div>
-        <p class="cta-desc">
-          クリニックにお越しいただき、<br>
-          口腔内の状態を直接確認しながら<br>
-          詳しい治療プランを<br>ご提案します。
-        </p>
-        <a class="btn-cta outline" href="https://www.e8148.net/script_4.0/pc/index.php?Comp_ID=2900608501" target="_blank" rel="noopener">初診予約をする</a>
+        <p class="cta-desc">クリニックにお越しいただき、口腔内の状態を直接確認しながら詳しい治療プランをご提案します。</p>
+        <a class="cta-btn outline" href="https://www.e8148.net/script_4.0/pc/index.php?Comp_ID=2900608501" target="_blank" rel="noopener">初診予約をする</a>
       </div>
     </div>
     <div class="retry-row">
-      <button class="btn-retry" onclick="retryQuiz()">もう一度診断する</button>
+      <button class="btn-retry" id="btn-retry">もう一度診断する</button>
     </div>
   </div>
 </div>
 
 <script>
-// ===== QUESTIONS DATA =====
+// ===== データ =====
 const QUESTIONS = [
-  // Section A: 日常生活
-  { id:'A1', section:'A', sectionName:'日常生活', q:'毎日ほぼ同じ時間に寝起きしていますか？', type:'lifestyle', weight:1, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
-  { id:'A2', section:'A', sectionName:'日常生活', q:'食後に必ず歯磨きをする習慣がありますか？', type:'hygiene', weight:2, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
-  { id:'A3', section:'A', sectionName:'日常生活', q:'忙しい時でも、習慣的なことを忘れずにできますか？', type:'routine', weight:1.5, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
-  { id:'A4', section:'A', sectionName:'日常生活', q:'旅行や出張に出かけることが多いですか？', type:'travel', weight:1, positive:['いいえ'], neutral:['どちらでもない'], negative:['はい'] },
-  { id:'A5', section:'A', sectionName:'日常生活', q:'外食や会食が週に3回以上ありますか？', type:'dining', weight:1, positive:['いいえ'], neutral:['どちらでもない'], negative:['はい'] },
-  { id:'A6', section:'A', sectionName:'日常生活', q:'お酒を飲む頻度は高いですか？', type:'alcohol', weight:1, positive:['いいえ'], neutral:['どちらでもない'], negative:['はい'] },
-  { id:'A7', section:'A', sectionName:'日常生活', q:'喫煙の習慣はありますか？', type:'smoking', weight:2, positive:['いいえ'], neutral:[], negative:['はい','どちらでもない'] },
-  { id:'A8', section:'A', sectionName:'日常生活', q:'運動や部活でマウスピースを長時間外す可能性がありますか？', type:'sports', weight:1, positive:['いいえ'], neutral:['どちらでもない'], negative:['はい'] },
-  { id:'A9', section:'A', sectionName:'日常生活', q:'甘いお菓子や飲み物などの間食を毎日しますか？', type:'snack', weight:1, positive:['いいえ'], neutral:['どちらでもない'], negative:['はい'] },
-  { id:'A10', section:'A', sectionName:'日常生活', q:'間食や飲み物のたびにアライナーを外して歯磨きすることに抵抗はありませんか？', type:'hygiene2', weight:2, positive:['抵抗はない'], neutral:['どちらでもない'], negative:['抵抗がある'] },
-
-  // Section B: 性格・行動
-  { id:'B10', section:'B', sectionName:'性格・行動', q:'コツコツ続けることが得意ですか？', type:'perseverance', weight:1.5, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
-  { id:'B11', section:'B', sectionName:'性格・行動', q:'決められたルールを守ることが苦になりませんか？', type:'rule', weight:1.5, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
-  { id:'B12', section:'B', sectionName:'性格・行動', q:'細かいことを気にせず大ざっぱな方ですか？', type:'detail', weight:1, positive:['いいえ'], neutral:['どちらでもない'], negative:['はい'] },
-  { id:'B13', section:'B', sectionName:'性格・行動', q:'忘れ物や物をなくすことが多いですか？', type:'forgetful', weight:1.5, positive:['いいえ'], neutral:['どちらでもない'], negative:['はい'] },
-  { id:'B14', section:'B', sectionName:'性格・行動', q:'周囲から「几帳面」「真面目」と言われることが多いですか？', type:'meticulous', weight:1, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
-  { id:'B15', section:'B', sectionName:'性格・行動', q:'新しい習慣を取り入れるのは得意ですか？', type:'adaptable', weight:1, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
-  { id:'B16', section:'B', sectionName:'性格・行動', q:'他人に指摘されなくても自分から修正できる方ですか？', type:'selfcorrect', weight:1.5, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
-  { id:'B17', section:'B', sectionName:'性格・行動', q:'長期間の計画を立てて実行することは得意ですか？', type:'longterm', weight:1, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
-
-  // Section C: 装置想定
-  { id:'C18', section:'C', sectionName:'装置への理解', q:'1日20時間以上装置をつけ続けることに抵抗はありませんか？', type:'wear20h', weight:2, positive:['抵抗はない'], neutral:['どちらでもない'], negative:['抵抗がある'] },
-  { id:'C19', section:'C', sectionName:'装置への理解', q:'食事のたびに外し、歯磨き後に装着し直すことを苦痛に感じますか？', type:'remove', weight:2, positive:['感じない'], neutral:['どちらでもない'], negative:['感じる'] },
-  { id:'C20', section:'C', sectionName:'装置への理解', q:'外出先でも装置の取り外し・清掃を行うことができますか？', type:'outdoor', weight:1.5, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
-  { id:'C21', section:'C', sectionName:'装置への理解', q:'必要に応じて歯を削る場合がありますが、受け入れられますか？', type:'ipr', weight:1, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
-  { id:'C22', section:'C', sectionName:'装置への理解', q:'装置の管理（洗浄・保管ケース使用など）がきちんとできますか？', type:'manage', weight:2, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
-  { id:'C23', section:'C', sectionName:'装置への理解', q:'装置の紛失や破損が起きた場合、すぐに連絡できますか？', type:'contact', weight:1, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
-
-  // Section D: 通院・協力
-  { id:'D24', section:'D', sectionName:'通院・協力', q:'4〜8週間ごとの通院に無理なく対応できますか？', type:'visit', weight:2, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
-  { id:'D25', section:'D', sectionName:'通院・協力', q:'写真撮影やアプリを使った遠隔チェックに協力できますか？', type:'remote', weight:1.5, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
-  { id:'D26', section:'D', sectionName:'通院・協力', q:'歯科医師やスタッフからの注意・指導を素直に受け入れる方ですか？', type:'instruction', weight:1.5, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
-
-  // Section E: 期待・理解
-  { id:'E28', section:'E', sectionName:'期待・理解', q:'追加のアライナーが必要になっても理解できますか？', type:'refinement', weight:1, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
-  { id:'E29', section:'E', sectionName:'期待・理解', q:'治療期間が予定より延びる可能性を受け入れられますか？', type:'duration', weight:1, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
-  { id:'E30', section:'E', sectionName:'期待・理解', q:'ワイヤーや補助装置を併用する可能性があることを理解できますか？', type:'hybrid', weight:1, positive:['はい'], neutral:['どちらでもない'], negative:['いいえ'] },
+  {id:'A1', sec:'A', secName:'日常生活', q:'毎日ほぼ同じ時間に寝起きしていますか？', w:1, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
+  {id:'A2', sec:'A', secName:'日常生活', q:'食後に必ず歯磨きをする習慣がありますか？', w:2, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
+  {id:'A3', sec:'A', secName:'日常生活', q:'忙しい時でも、習慣的なことを忘れずにできますか？', w:1.5, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
+  {id:'A4', sec:'A', secName:'日常生活', q:'旅行や出張に出かけることが多いですか？', w:1, pos:['いいえ'], neu:['どちらでもない'], neg:['はい']},
+  {id:'A5', sec:'A', secName:'日常生活', q:'外食や会食が週に3回以上ありますか？', w:1, pos:['いいえ'], neu:['どちらでもない'], neg:['はい']},
+  {id:'A6', sec:'A', secName:'日常生活', q:'お酒を飲む頻度は高いですか？', w:1, pos:['いいえ'], neu:['どちらでもない'], neg:['はい']},
+  {id:'A7', sec:'A', secName:'日常生活', q:'喫煙の習慣はありますか？', w:2, pos:['いいえ'], neu:[], neg:['はい','どちらでもない']},
+  {id:'A8', sec:'A', secName:'日常生活', q:'運動や部活でマウスピースを長時間外す可能性がありますか？', w:1, pos:['いいえ'], neu:['どちらでもない'], neg:['はい']},
+  {id:'A9', sec:'A', secName:'日常生活', q:'甘いお菓子や飲み物などの間食を毎日しますか？', w:1, pos:['いいえ'], neu:['どちらでもない'], neg:['はい']},
+  {id:'A10', sec:'A', secName:'日常生活', q:'間食や飲み物のたびにアライナーを外して歯磨きすることに抵抗はありませんか？', w:2, pos:['抵抗はない'], neu:['どちらでもない'], neg:['抵抗がある']},
+  {id:'B10', sec:'B', secName:'性格・行動', q:'コツコツ続けることが得意ですか？', w:1.5, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
+  {id:'B11', sec:'B', secName:'性格・行動', q:'決められたルールを守ることが苦になりませんか？', w:1.5, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
+  {id:'B12', sec:'B', secName:'性格・行動', q:'細かいことを気にせず大ざっぱな方ですか？', w:1, pos:['いいえ'], neu:['どちらでもない'], neg:['はい']},
+  {id:'B13', sec:'B', secName:'性格・行動', q:'忘れ物や物をなくすことが多いですか？', w:1.5, pos:['いいえ'], neu:['どちらでもない'], neg:['はい']},
+  {id:'B14', sec:'B', secName:'性格・行動', q:'周囲から「几帳面」「真面目」と言われることが多いですか？', w:1, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
+  {id:'B15', sec:'B', secName:'性格・行動', q:'新しい習慣を取り入れるのは得意ですか？', w:1, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
+  {id:'B16', sec:'B', secName:'性格・行動', q:'他人に指摘されなくても自分から修正できる方ですか？', w:1.5, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
+  {id:'B17', sec:'B', secName:'性格・行動', q:'長期間の計画を立てて実行することは得意ですか？', w:1, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
+  {id:'C18', sec:'C', secName:'装置への理解', q:'1日20時間以上装置をつけ続けることに抵抗はありませんか？', w:2, pos:['抵抗はない'], neu:['どちらでもない'], neg:['抵抗がある']},
+  {id:'C19', sec:'C', secName:'装置への理解', q:'食事のたびに外し、歯磨き後に装着し直すことを苦痛に感じますか？', w:2, pos:['感じない'], neu:['どちらでもない'], neg:['感じる']},
+  {id:'C20', sec:'C', secName:'装置への理解', q:'外出先でも装置の取り外し・清掃を行うことができますか？', w:1.5, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
+  {id:'C21', sec:'C', secName:'装置への理解', q:'必要に応じて歯を削る場合がありますが、受け入れられますか？', w:1, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
+  {id:'C22', sec:'C', secName:'装置への理解', q:'装置の管理（洗浄・保管ケース使用など）がきちんとできますか？', w:2, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
+  {id:'C23', sec:'C', secName:'装置への理解', q:'装置の紛失や破損が起きた場合、すぐに連絡できますか？', w:1, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
+  {id:'D24', sec:'D', secName:'通院・協力', q:'4〜8週間ごとの通院に無理なく対応できますか？', w:2, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
+  {id:'D25', sec:'D', secName:'通院・協力', q:'写真撮影やアプリを使った遠隔チェックに協力できますか？', w:1.5, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
+  {id:'D26', sec:'D', secName:'通院・協力', q:'歯科医師やスタッフからの注意・指導を素直に受け入れる方ですか？', w:1.5, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
+  {id:'E28', sec:'E', secName:'期待・理解', q:'追加のアライナーが必要になっても理解できますか？', w:1, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
+  {id:'E29', sec:'E', secName:'期待・理解', q:'治療期間が予定より延びる可能性を受け入れられますか？', w:1, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
+  {id:'E30', sec:'E', secName:'期待・理解', q:'ワイヤーや補助装置を併用する可能性があることを理解できますか？', w:1, pos:['はい'], neu:['どちらでもない'], neg:['いいえ']},
 ];
 
-// ===== ANSWER OPTIONS per question =====
-const ANSWER_OPTS = {
-  default: ['はい', 'どちらでもない', 'いいえ'],
-  A10: ['抵抗はない', 'どちらでもない', '抵抗がある'],
-  C18: ['抵抗はない', 'どちらでもない', '抵抗がある'],
-  C19: ['感じない', 'どちらでもない', '感じる'],
+const OPTS = {
+  default: ['はい','どちらでもない','いいえ'],
+  A10: ['抵抗はない','どちらでもない','抵抗がある'],
+  C18: ['抵抗はない','どちらでもない','抵抗がある'],
+  C19: ['感じない','どちらでもない','感じる'],
 };
 
-function getOptions(q) {
-  return ANSWER_OPTS[q.id] || ANSWER_OPTS.default;
-}
+const SEC_NAMES = {A:'A. 日常生活', B:'B. 性格・行動', C:'C. 装置への理解', D:'D. 通院・協力', E:'E. 期待・理解'};
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbznjbL2yBP-JKyPwx0ckSlRpaiDRLiolZtcbW-CdWgsTuIksQNxWMlRvgh878WyATK5/exec';
 
-// ===== STATE =====
-let currentIdx = 0;
+// ===== 状態 =====
+let idx = 0;
 let answers = {};
 let patientName = '';
 
-function startQuiz() {
-  const nameInput = document.getElementById('patient-name');
-  const nameError = document.getElementById('name-error');
-  const name = nameInput.value.trim();
+// ===== 画面切替 =====
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0, behavior:'instant'});
+}
 
+// ===== トップ =====
+document.getElementById('btn-start').addEventListener('click', function() {
+  const field = document.getElementById('patient-name');
+  const err = document.getElementById('name-error');
+  const name = field.value.trim();
   if (!name) {
-    nameError.style.display = 'block';
-    nameInput.focus();
-    nameInput.style.borderColor = '#f08080';
+    err.style.display = 'block';
+    field.classList.add('error');
+    field.focus();
     return;
   }
-
-  nameError.style.display = 'none';
+  err.style.display = 'none';
+  field.classList.remove('error');
   patientName = name;
-  document.getElementById('screen-top').style.display = 'none';
-  document.getElementById('screen-quiz').style.display = 'block';
-  renderQuestion();
-}
+  idx = 0;
+  answers = {};
+  showScreen('screen-quiz');
+  renderQ();
+});
 
-function renderQuestion() {
-  const q = QUESTIONS[currentIdx];
+document.getElementById('patient-name').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') document.getElementById('btn-start').click();
+});
+
+// ===== 問診票 =====
+function renderQ() {
+  const q = QUESTIONS[idx];
   const total = QUESTIONS.length;
-  const pct = ((currentIdx) / total) * 100;
-
-  document.getElementById('prog-fill').style.width = pct + '%';
-  document.getElementById('prog-current').textContent = (currentIdx + 1) + ' / ' + total;
-  document.getElementById('prog-section').textContent = q.section + '. ' + q.sectionName;
-
-  const opts = getOptions(q);
+  const opts = OPTS[q.id] || OPTS.default;
   const chosen = answers[q.id];
-  const isLast = currentIdx === total - 1;
+  const isLast = idx === total - 1;
 
-  document.getElementById('quiz-body').innerHTML = `
-    <div class="section-badge">
-      <div class="section-dot"></div>
-      ${q.section}. ${q.sectionName}
-    </div>
-    <div class="question-card">
-      <div class="question-num">Q${currentIdx + 1} / ${total}</div>
-      <div class="question-text">${q.q}</div>
-      <div class="answer-options" id="answer-options"></div>
-    </div>
-    <div class="nav-row">
-      ${currentIdx > 0 ? `<button class="btn-nav btn-prev" id="btn-prev">← 戻る</button>` : '<div></div>'}
-      <button class="btn-nav btn-next ${isLast ? 'btn-submit' : ''}" id="btn-next"
-        ${!chosen ? 'disabled' : ''}>
-        ${isLast ? '結果を見る' : '次へ →'}
-      </button>
-    </div>
-  `;
+  document.getElementById('prog-fill').style.width = (idx / total * 100) + '%';
+  document.getElementById('prog-num').textContent = (idx+1) + ' / ' + total;
+  document.getElementById('prog-sec').textContent = q.sec + '. ' + q.secName;
 
-  // 選択肢ボタンをJSで生成（onclick属性を使わない）
-  const optContainer = document.getElementById('answer-options');
-  opts.forEach(opt => {
+  const body = document.getElementById('quiz-body');
+  body.innerHTML = '';
+
+  // セクションバッジ
+  const badge = document.createElement('div');
+  badge.className = 'section-badge';
+  badge.innerHTML = '<div class="sec-dot"></div>' + q.sec + '. ' + q.secName;
+  body.appendChild(badge);
+
+  // カード
+  const card = document.createElement('div');
+  card.className = 'q-card';
+  const qNum = document.createElement('div');
+  qNum.className = 'q-num';
+  qNum.textContent = 'Q' + (idx+1) + ' / ' + total;
+  const qText = document.createElement('div');
+  qText.className = 'q-text';
+  qText.textContent = q.q;
+  const optsDiv = document.createElement('div');
+  optsDiv.className = 'opts';
+
+  opts.forEach(function(opt) {
     const btn = document.createElement('button');
-    btn.className = 'answer-btn' + (chosen === opt ? ' selected' : '');
-    btn.innerHTML = '<div class="answer-circle"></div>' + opt;
-    btn.addEventListener('click', () => selectAnswer(opt));
-    optContainer.appendChild(btn);
+    btn.className = 'opt-btn' + (chosen === opt ? ' selected' : '');
+    btn.innerHTML = '<div class="opt-circle"><div class="opt-circle-inner"></div></div>';
+    btn.appendChild(document.createTextNode(opt));
+    btn.addEventListener('click', function() {
+      answers[q.id] = opt;
+      renderQ();
+    });
+    optsDiv.appendChild(btn);
   });
 
-  // ナビボタン
-  const btnNext = document.getElementById('btn-next');
-  btnNext.addEventListener('click', () => {
-    if (isLast) submitQuiz();
-    else goNext();
+  card.appendChild(qNum);
+  card.appendChild(qText);
+  card.appendChild(optsDiv);
+  body.appendChild(card);
+
+  // ナビ
+  const nav = document.createElement('div');
+  nav.className = 'nav-row';
+
+  if (idx > 0) {
+    const prev = document.createElement('button');
+    prev.className = 'btn-prev';
+    prev.textContent = '← 戻る';
+    prev.addEventListener('click', function() {
+      idx--;
+      renderQ();
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+    nav.appendChild(prev);
+  } else {
+    nav.appendChild(document.createElement('div'));
+  }
+
+  const next = document.createElement('button');
+  next.className = 'btn-next' + (isLast ? ' submit' : '');
+  next.textContent = isLast ? '結果を見る' : '次へ →';
+  next.disabled = !chosen;
+  next.addEventListener('click', function() {
+    if (isLast) {
+      showResult();
+    } else {
+      idx++;
+      renderQ();
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
   });
-
-  const btnPrev = document.getElementById('btn-prev');
-  if (btnPrev) btnPrev.addEventListener('click', goBack);
+  nav.appendChild(next);
+  body.appendChild(nav);
 }
 
-function selectAnswer(opt) {
-  const q = QUESTIONS[currentIdx];
-  answers[q.id] = opt;
-  renderQuestion();
-}
-
-function goNext() {
-  if (currentIdx < QUESTIONS.length - 1) {
-    currentIdx++;
-    renderQuestion();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-}
-
-function goBack() {
-  if (currentIdx > 0) {
-    currentIdx--;
-    renderQuestion();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-}
-
-// ===== SCORING =====
+// ===== 採点 =====
 function calcScore() {
-  let totalWeighted = 0, maxWeighted = 0;
-  const sectionScores = { A:0, B:0, C:0, D:0, E:0 };
-  const sectionMax   = { A:0, B:0, C:0, D:0, E:0 };
-  const flaggedQs = [];
+  let total = 0, max = 0;
+  const secScore = {A:0,B:0,C:0,D:0,E:0};
+  const secMax   = {A:0,B:0,C:0,D:0,E:0};
+  const flagged = [];
 
-  QUESTIONS.forEach(q => {
+  QUESTIONS.forEach(function(q) {
     const ans = answers[q.id];
-    const w = q.weight;
+    const w = q.w;
     let pts = 0;
-
-    if (q.positive.includes(ans)) pts = 1;
-    else if (q.neutral.includes(ans)) pts = 0.5;
+    if (q.pos.indexOf(ans) >= 0) pts = 1;
+    else if (q.neu.indexOf(ans) >= 0) pts = 0.5;
     else pts = 0;
-
-    // Flag critical negatives
-    if (pts === 0 && w >= 2) flaggedQs.push(q);
-
-    totalWeighted += pts * w;
-    maxWeighted   += 1  * w;
-    sectionScores[q.section] += pts * w;
-    sectionMax[q.section]    += 1  * w;
+    if (pts === 0 && w >= 2) flagged.push(q);
+    total += pts * w;
+    max += w;
+    secScore[q.sec] += pts * w;
+    secMax[q.sec] += w;
   });
 
-  const pct = Math.round((totalWeighted / maxWeighted) * 100);
-
+  const pct = Math.round(total / max * 100);
   const secPct = {};
-  Object.keys(sectionScores).forEach(s => {
-    secPct[s] = Math.round((sectionScores[s] / sectionMax[s]) * 100);
+  Object.keys(secScore).forEach(function(s) {
+    secPct[s] = Math.round(secScore[s] / secMax[s] * 100);
   });
-
-  return { pct, secPct, flaggedQs };
+  return {pct, secPct, flagged};
 }
 
-function getResultType(pct) {
-  if (pct >= 80) return {
-    badge: 'Aタイプ：高適性',
-    headline: 'マウスピース矯正に\n非常に向いています',
-    summary: 'ライフスタイル・性格・装置への理解いずれも優れており、治療成功の可能性が高いと評価されます。ぜひ専門医にご相談ください。',
-    type: 'A'
-  };
-  if (pct >= 60) return {
-    badge: 'Bタイプ：適性あり',
-    headline: 'マウスピース矯正に\n向いています',
-    summary: '全体的に適性は十分にあります。一部の項目を意識していただくことで、より安定した治療結果が期待できます。',
-    type: 'B'
-  };
-  if (pct >= 40) return {
-    badge: 'Cタイプ：要相談',
-    headline: 'いくつかの点で\nご確認が必要です',
-    summary: '治療を成功させるためにクリアすべき課題があります。専門医との相談の中で、適切な治療選択を検討しましょう。',
-    type: 'C'
-  };
-  return {
-    badge: 'Dタイプ：代替手段を検討',
-    headline: 'ワイヤー矯正の方が\n適している可能性があります',
-    summary: 'マウスピース型装置には、ライフスタイル上の制約が伴います。ワイヤー矯正を含む他の選択肢についてご相談ください。',
-    type: 'D'
-  };
+function getType(pct) {
+  if (pct >= 80) return {badge:'Aタイプ：高適性', headline:'マウスピース矯正に非常に向いています', summary:'ライフスタイル・性格・装置への理解いずれも優れており、治療成功の可能性が高いと評価されます。ぜひ専門医にご相談ください。'};
+  if (pct >= 60) return {badge:'Bタイプ：適性あり', headline:'マウスピース矯正に向いています', summary:'全体的に適性は十分にあります。一部の項目を意識していただくことで、より安定した治療結果が期待できます。'};
+  if (pct >= 40) return {badge:'Cタイプ：要相談', headline:'いくつかの点でご確認が必要です', summary:'治療を成功させるためにクリアすべき課題があります。専門医との相談の中で、適切な治療選択を検討しましょう。'};
+  return {badge:'Dタイプ：代替手段を検討', headline:'ワイヤー矯正の方が適している可能性があります', summary:'マウスピース型装置には生活上の制約が伴います。ワイヤー矯正を含む他の選択肢についてご相談ください。'};
 }
 
-const SECTION_NAMES = {
-  A: 'A. 日常生活',
-  B: 'B. 性格・行動',
-  C: 'C. 装置への理解',
-  D: 'D. 通院・協力',
-  E: 'E. 期待・理解',
-};
+// ===== 結果表示 =====
+function showResult() {
+  const {pct, secPct, flagged} = calcScore();
+  const type = getType(pct);
 
-function generateFeedback(secPct, flaggedQs) {
-  const cards = [];
+  showScreen('screen-result');
 
-  // Strengths
-  const strengths = Object.entries(secPct).filter(([,v]) => v >= 80).map(([k]) => SECTION_NAMES[k]);
-  if (strengths.length) {
-    cards.push({ type:'good', icon:'✓', title:'強みのある領域', text: strengths.join('、') + 'のスコアが高く、装置治療との相性が良好です。' });
-  }
-
-  // Cautions from flags
-  if (flaggedQs.length) {
-    const items = flaggedQs.map(q => `「${q.q}」`).join(' / ');
-    cards.push({ type:'caution', icon:'△', title:'特に注意が必要な項目', text: items + ' などの項目で課題が見られます。初診時にご相談ください。' });
-  }
-
-  // Low section
-  const weak = Object.entries(secPct).filter(([,v]) => v < 60).map(([k]) => SECTION_NAMES[k]);
-  if (weak.length) {
-    cards.push({ type:'note', icon:'i', title:'改善のポイント', text: weak.join('、') + 'のスコアが低めです。治療開始前にどのような工夫ができるかを一緒に考えましょう。' });
-  }
-
-  // Universal note
-  cards.push({ type:'note', icon:'i', title:'診断について', text: 'この診断はあくまで参考指標です。最終的な治療適応の判断は、口腔内検査・CBCT撮影・歯型採得などの精密検査を経て専門医が行います。' });
-
-  return cards;
-}
-
-function submitQuiz() {
-  // デバッグ確認
-  const ansCount = Object.keys(answers).length;
-  const sample = JSON.stringify(answers).slice(0, 200);
-  alert('回答数: ' + ansCount + '\n内容: ' + sample);
-
-  document.getElementById('screen-quiz').style.display = 'none';
-  document.getElementById('screen-result').style.display = 'block';
-  window.scrollTo({ top: 0, behavior: 'instant' });
-
-  const { pct, secPct, flaggedQs } = calcScore();
-  const result = getResultType(pct);
-
-  // テキスト表示
-  document.getElementById('result-type-badge').textContent = result.badge;
-  document.getElementById('result-headline').textContent = result.headline;
-  document.getElementById('result-summary').textContent = result.summary;
+  // ラベル
   document.getElementById('result-label').textContent = patientName + ' さんの診断結果';
+  document.getElementById('result-badge').textContent = type.badge;
+  document.getElementById('result-headline').textContent = type.headline;
+  document.getElementById('result-summary').textContent = type.summary;
 
   // スコアカウントアップ
-  let displayed = 0;
-  const counter = setInterval(() => {
-    displayed = Math.min(displayed + 1, pct);
-    document.getElementById('result-pct').textContent = displayed;
-    if (displayed >= pct) clearInterval(counter);
-  }, 20);
+  let n = 0;
+  const timer = setInterval(function() {
+    n = Math.min(n+1, pct);
+    document.getElementById('pct-num').textContent = n;
+    if (n >= pct) clearInterval(timer);
+  }, 18);
 
-  // リングアニメーション
-  const circumference = 2 * Math.PI * 80;
-  const offset = circumference * (1 - pct / 100);
-  setTimeout(() => {
-    document.getElementById('score-ring').style.strokeDashoffset = offset;
+  // リング
+  const circ = 2 * Math.PI * 78;
+  const offset = circ * (1 - pct/100);
+  setTimeout(function() {
+    document.getElementById('ring-fill').style.strokeDasharray = circ;
+    document.getElementById('ring-fill').style.strokeDashoffset = offset;
   }, 100);
 
-  // セクションバー（DOMに挿入後にwidthをセット）
-  const barsHtml = Object.entries(secPct).map(([sec, val], i) => `
-    <div class="bar-row">
-      <div class="bar-label-row">
-        <span class="bar-label">${SECTION_NAMES[sec]}</span>
-        <span class="bar-pct">${val}%</span>
-      </div>
-      <div class="bar-track">
-        <div class="bar-fill" style="--delay:${0.1 + i * 0.1}s" data-width="${val}"></div>
-      </div>
-    </div>
-  `).join('');
-  document.getElementById('section-bars').innerHTML = barsHtml;
-  // 1フレーム待ってからwidth適用
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      document.querySelectorAll('.bar-fill').forEach(el => {
-        el.style.width = el.dataset.width + '%';
+  // セクションバー
+  const barsEl = document.getElementById('sec-bars');
+  barsEl.innerHTML = '';
+  Object.keys(secPct).forEach(function(s, i) {
+    const val = secPct[s];
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML =
+      '<div class="bar-labels"><span class="bar-name">' + SEC_NAMES[s] + '</span><span class="bar-pct">' + val + '%</span></div>' +
+      '<div class="bar-track"><div class="bar-fill" id="bar-' + s + '"></div></div>';
+    barsEl.appendChild(row);
+  });
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      Object.keys(secPct).forEach(function(s, i) {
+        const el = document.getElementById('bar-' + s);
+        if (el) {
+          el.style.transition = 'width 1.1s cubic-bezier(0.4,0,0.2,1) ' + (i * 0.1) + 's';
+          el.style.width = secPct[s] + '%';
+        }
       });
     });
   });
 
   // フィードバック
-  const feedbacks = generateFeedback(secPct, flaggedQs);
-  document.getElementById('feedback-cards').innerHTML = feedbacks.map(f => `
-    <div class="feedback-card ${f.type}">
-      <div class="feedback-icon">${f.icon}</div>
-      <div class="feedback-title">${f.title}</div>
-      <div class="feedback-text">${f.text}</div>
-    </div>
-  `).join('');
+  const fbEl = document.getElementById('fb-cards');
+  fbEl.innerHTML = '';
+  const strengths = Object.keys(secPct).filter(s => secPct[s] >= 80).map(s => SEC_NAMES[s]);
+  if (strengths.length) addFb(fbEl, 'good', '✓', '強みのある領域', strengths.join('、') + 'のスコアが高く、装置治療との相性が良好です。');
+  if (flagged.length) addFb(fbEl, 'caution', '△', '特に注意が必要な項目', flagged.map(q => '「' + q.q + '」').join(' / ') + ' などの項目で課題が見られます。初診時にご相談ください。');
+  const weak = Object.keys(secPct).filter(s => secPct[s] < 60).map(s => SEC_NAMES[s]);
+  if (weak.length) addFb(fbEl, 'note', 'i', '改善のポイント', weak.join('、') + 'のスコアが低めです。治療開始前にどのような工夫ができるかを一緒に考えましょう。');
+  addFb(fbEl, 'note', 'i', '診断について', 'この診断はあくまで参考指標です。最終的な適応判断は、口腔内検査・CBCT撮影などの精密検査を経て専門医が行います。');
 
-  // Googleフォームに送信
-  sendToGoogleForm(pct, secPct, result);
+  // アコーディオン
+  document.getElementById('acc-body').innerHTML = '';
+  document.getElementById('acc-body').style.display = 'none';
+  document.getElementById('acc-btn').classList.remove('open');
+
+  // GAS送信
+  sendGAS(pct, secPct, type);
 }
 
-function sendToGoogleForm(pct, secPct, result) {
-  const answerText = QUESTIONS.map((q, i) => {
-    const ans = answers[q.id] || '未回答';
-    return `Q${i+1}(${q.id}) ${q.q} → ${ans}`;
-  }).join(' / ');
+function addFb(parent, type, icon, title, text) {
+  const card = document.createElement('div');
+  card.className = 'fb-card ' + type;
+  card.innerHTML = '<div class="fb-icon">' + icon + '</div><div class="fb-title">' + title + '</div><div class="fb-text">' + text + '</div>';
+  parent.appendChild(card);
+}
 
+// ===== アコーディオン =====
+document.getElementById('acc-btn').addEventListener('click', function() {
+  const btn = document.getElementById('acc-btn');
+  const body = document.getElementById('acc-body');
+  const isOpen = btn.classList.contains('open');
+  if (isOpen) {
+    btn.classList.remove('open');
+    body.style.display = 'none';
+  } else {
+    if (!body.innerHTML) buildAccordion(body);
+    btn.classList.add('open');
+    body.style.display = 'block';
+  }
+});
+
+function buildAccordion(body) {
+  const secs = ['A','B','C','D','E'];
+  let qNum = 1;
+  secs.forEach(function(sec) {
+    const qs = QUESTIONS.filter(q => q.sec === sec);
+    const header = document.createElement('div');
+    header.className = 'acc-sec-header';
+    header.textContent = sec + '. ' + qs[0].secName;
+    body.appendChild(header);
+    qs.forEach(function(q) {
+      const ans = answers[q.id] || '—';
+      let chipClass = 'neu';
+      if (q.pos.indexOf(ans) >= 0) chipClass = 'pos';
+      else if (q.neg.indexOf(ans) >= 0) chipClass = 'neg';
+      const row = document.createElement('div');
+      row.className = 'acc-row';
+      row.innerHTML =
+        '<div class="acc-qnum">Q' + qNum + '</div>' +
+        '<div class="acc-qtext">' + q.q + '</div>' +
+        '<div class="acc-chip ' + chipClass + '">' + ans + '</div>';
+      body.appendChild(row);
+      qNum++;
+    });
+  });
+}
+
+// ===== リトライ =====
+document.getElementById('btn-retry').addEventListener('click', function() {
+  idx = 0;
+  answers = {};
+  patientName = '';
+  document.getElementById('patient-name').value = '';
+  document.getElementById('patient-name').classList.remove('error');
+  document.getElementById('name-error').style.display = 'none';
+  showScreen('screen-top');
+});
+
+// ===== GAS送信 =====
+function sendGAS(pct, secPct, type) {
   const now = new Date();
-  const dateStr = now.getFullYear() + '/'
-    + String(now.getMonth()+1).padStart(2,'0') + '/'
-    + String(now.getDate()).padStart(2,'0') + ' '
-    + String(now.getHours()).padStart(2,'0') + ':'
-    + String(now.getMinutes()).padStart(2,'0');
+  const dt = now.getFullYear() + '/' +
+    String(now.getMonth()+1).padStart(2,'0') + '/' +
+    String(now.getDate()).padStart(2,'0') + ' ' +
+    String(now.getHours()).padStart(2,'0') + ':' +
+    String(now.getMinutes()).padStart(2,'0');
 
-  const GAS_URL = 'https://script.google.com/macros/s/AKfycbznjbL2yBP-JKyPwx0ckSlRpaiDRLiolZtcbW-CdWgsTuIksQNxWMlRvgh878WyATK5/exec';
+  const ansText = QUESTIONS.map(function(q, i) {
+    return 'Q' + (i+1) + '(' + q.id + ') ' + q.q + ' → ' + (answers[q.id] || '未回答');
+  }).join(' / ');
 
   fetch(GAS_URL, {
     method: 'POST',
     mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
-      datetime: dateStr,
-      name:     patientName,
-      score:    pct + '%',
-      type:     result.badge,
-      secA:     secPct['A'] + '%',
-      secB:     secPct['B'] + '%',
-      secC:     secPct['C'] + '%',
-      secD:     secPct['D'] + '%',
-      secE:     secPct['E'] + '%',
-      answers:  answerText,
+      datetime: dt,
+      name: patientName,
+      score: pct + '%',
+      type: type.badge,
+      secA: secPct['A'] + '%',
+      secB: secPct['B'] + '%',
+      secC: secPct['C'] + '%',
+      secD: secPct['D'] + '%',
+      secE: secPct['E'] + '%',
+      answers: ansText
     })
-  }).catch(() => {
-    console.warn('GAS送信に失敗しました');
-  });
+  }).catch(function() {});
 }
-
-function retryQuiz() {
-  currentIdx = 0;
-  answers = {};
-  patientName = '';
-  document.getElementById('patient-name').value = '';
-  document.getElementById('patient-name').style.borderColor = '';
-  document.getElementById('name-error').style.display = 'none';
-  document.getElementById('accordion-body').innerHTML = '';
-  document.getElementById('accordion-body').classList.remove('open');
-  document.getElementById('accordion-btn').classList.remove('open');
-  document.getElementById('screen-result').style.display = 'none';
-  document.getElementById('screen-top').style.display = 'flex';
-  window.scrollTo({ top: 0, behavior: 'instant' });
-}
-
-// ===== ACCORDION: 全回答一覧 =====
-function buildAnswerAccordion() {
-  const sections = ['A','B','C','D','E'];
-  let html = '';
-  let qNum = 1;
-
-  sections.forEach(sec => {
-    const qs = QUESTIONS.filter(q => q.section === sec);
-    const sectionName = qs[0].sectionName;
-
-    html += `<div class="answer-section-group">`;
-    html += `<div class="answer-section-header">${sec}. ${sectionName}</div>`;
-
-    qs.forEach(q => {
-      const ans = answers[q.id] || '—';
-      let chipClass = 'neutral';
-      if (q.positive.includes(ans)) chipClass = 'positive';
-      else if (q.negative.includes(ans)) chipClass = 'negative';
-
-      html += `
-        <div class="answer-row">
-          <div class="answer-qnum">Q${qNum}</div>
-          <div class="answer-qtext">${q.q}</div>
-          <div class="answer-chip ${chipClass}">${ans}</div>
-        </div>
-      `;
-      qNum++;
-    });
-
-    html += `</div>`;
-  });
-
-  document.getElementById('accordion-body').innerHTML = html;
-}
-
-function toggleAccordion() {
-  const btn = document.getElementById('accordion-btn');
-  const body = document.getElementById('accordion-body');
-  const isOpen = body.classList.contains('open');
-
-  if (isOpen) {
-    body.classList.remove('open');
-    btn.classList.remove('open');
-  }
+</script>
+</body>
+</html>
