@@ -782,7 +782,7 @@ function sendGAS(pct, secPct, type) {
 
   fetch(GAS_URL, {
     method: 'POST',
-    mode: 'no-cors',
+
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
       datetime: dt,
